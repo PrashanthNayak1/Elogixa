@@ -4,7 +4,7 @@ import { Plus, Trash2, FileText, LogOut, Loader2, Bookmark } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
 const AdminDashboard = () => {
     const [jobs, setJobs] = useState([]);
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
     const savedApplications = applications.filter((app) => app.isSavedForFuture);
 
     const authAxios = useMemo(() => axios.create({
-        baseURL: API_BASE_URL,
+        baseURL: `${API_BASE_URL}/api`,
         headers: {
             Authorization: `Bearer ${localStorage.getItem('adminToken')}`
         }
@@ -37,7 +37,7 @@ const AdminDashboard = () => {
     const handleAuthError = useCallback((err) => {
         if (err.response?.status === 401) {
             localStorage.removeItem('adminToken');
-            navigate('/login');
+            navigate('/admin/login');
             return true;
         }
         return false;
@@ -45,7 +45,7 @@ const AdminDashboard = () => {
 
     const fetchData = useCallback(async () => {
         try {
-            const jobsRes = await axios.get(`${API_BASE_URL}/jobs`);
+            const jobsRes = await axios.get(`${API_BASE_URL}/api/jobs`);
             const appsRes = await authAxios.get('/applications');
             const msgsRes = await authAxios.get('/contact');
             const pendingAdminsRes = await authAxios.get('/auth/pending-admins');
@@ -114,7 +114,7 @@ const AdminDashboard = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('adminToken');
-        navigate('/login');
+        navigate('/admin/login');
     };
 
     const handleApproveAdmin = async (id) => {
@@ -268,11 +268,10 @@ const AdminDashboard = () => {
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`px-4 py-2 rounded-full whitespace-nowrap border transition-colors ${
-                                activeTab === tab.key
+                            className={`px-4 py-2 rounded-full whitespace-nowrap border transition-colors ${activeTab === tab.key
                                     ? 'bg-accent text-white border-accent'
                                     : 'bg-white text-slate-600 border-[#e7e0c6] hover:bg-amber-50'
-                            }`}
+                                }`}
                         >
                             {tab.label}
                         </button>
@@ -320,7 +319,7 @@ const AdminDashboard = () => {
                             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
                                 <div>
                                     <h3 className="text-lg font-bold text-slate-800">Application Filters</h3>
-                                    
+
                                 </div>
                                 <button
                                     type="button"
@@ -441,11 +440,10 @@ const AdminDashboard = () => {
                                                     </a>
                                                     <button
                                                         onClick={() => handleToggleSavedApplicant(app._id, app.isSavedForFuture)}
-                                                        className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                                                            app.isSavedForFuture
+                                                        className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors ${app.isSavedForFuture
                                                                 ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
                                                                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                                                        }`}
+                                                            }`}
                                                         title={app.isSavedForFuture ? 'Remove applicant from saved list' : 'Save applicant for future'}
                                                     >
                                                         <Bookmark size={14} />

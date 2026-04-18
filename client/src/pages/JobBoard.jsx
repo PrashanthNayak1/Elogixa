@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import { MapPin, DollarSign, Briefcase } from 'lucide-react';
+import { MapPin, IndianRupee, Briefcase } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
 const JobBoard = () => {
     const [jobs, setJobs] = useState([]);
@@ -19,7 +18,7 @@ const JobBoard = () => {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                const res = await axios.get(`${API_BASE_URL}/jobs`);
+                const res = await axios.get(`${API_BASE_URL}/api/jobs`);
                 setJobs(Array.isArray(res.data) ? res.data : []);
             } catch (err) {
                 console.error(err);
@@ -56,7 +55,7 @@ const JobBoard = () => {
         formData.append('resume', applicationForm.resume);
 
         try {
-            await axios.post(`${API_BASE_URL}/applications`, formData, {
+            await axios.post(`${API_BASE_URL}/api/applications`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             toast.success('Application submitted successfully!');
@@ -91,7 +90,7 @@ const JobBoard = () => {
                                     <h3 className="text-xl font-bold text-slate-800">{job.title}</h3>
                                     <div className="flex flex-wrap gap-4 mt-2 text-sm text-slate-600">
                                         <span className="flex items-center gap-1"><MapPin size={16} /> {job.location}</span>
-                                        <span className="flex items-center gap-1"><DollarSign size={16} /> {job.salaryRange}</span>
+                                        <span className="flex items-center gap-1"><IndianRupee size={16} /> {job.salaryRange}</span>
                                         <span className="flex items-center gap-1">
                                             <Briefcase size={16} /> {job.openings > 0 ? `${job.openings} Openings` : 'No Openings'}
                                         </span>

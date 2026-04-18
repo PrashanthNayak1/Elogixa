@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle, Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
 const Home = () => {
     return (
@@ -291,7 +291,7 @@ const ContactForm = () => {
         setLoading(true);
         setStatus(null);
         try {
-            const response = await fetch(`${API_BASE_URL}/contact`, {
+            const response = await fetch(`${API_BASE_URL}/api/contact`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),

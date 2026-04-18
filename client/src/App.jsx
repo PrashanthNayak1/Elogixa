@@ -17,7 +17,7 @@ import AdminDashboard from './pages/AdminDashboard';
 
 const AppLayout = () => {
   const { pathname } = useLocation();
-  const isAdminRoute = pathname === '/login' || pathname.startsWith('/dashboard');
+  const isAdminRoute = pathname === '/admin/login' || pathname.startsWith('/admin/dashboard');
 
   return (
     <div className="min-h-screen bg-background text-primary">
@@ -29,11 +29,11 @@ const AppLayout = () => {
           <Route path="/" element={<Home />} />
           <Route path="/jobs" element={<JobBoard />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<Login />} />
 
           {/* Protected Route */}
           <Route
-            path="/dashboard"
+            path="/admin/dashboard"
             element={
               <ProtectedRoute>
                 <AdminDashboard />

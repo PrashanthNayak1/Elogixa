@@ -3,13 +3,12 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { CloudCog, Eye, EyeOff, Mail, User, X } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
-const ADMIN_LOGIN_PATH = '/login';
-const ADMIN_DASHBOARD_PATH = '/dashboard';
-const GOOGLE_BUTTON_WIDTH = 360;
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
 const AuthModal = ({ isOpen, onClose, onUserAuthenticated }) => {
+    const navigate = useNavigate();
     const [roleTab, setRoleTab] = useState('user'); // 'user' or 'admin'
     const [mode, setMode] = useState('login');
     const [username, setUsername] = useState('');
@@ -45,18 +44,20 @@ const AuthModal = ({ isOpen, onClose, onUserAuthenticated }) => {
     });
 
     const redirectToAdminLogin = () => {
-        window.location.href = ADMIN_LOGIN_PATH;
+        handleClose();
+        navigate('/admin/login');
     };
 
     const redirectToAdminDashboard = (token) => {
         localStorage.setItem('adminToken', token);
-        window.location.href = ADMIN_DASHBOARD_PATH;
+        handleClose();
+        navigate('/admin/dashboard');
     };
 
     const handleGoogleSuccess = async (credentialResponse) => {
         try {
             setLoading(true);
-            const { data } = await axios.post(`${API_BASE_URL}/auth/google`, {
+            const { data } = await axios.post(`${API_BASE_URL}/api/auth/google`, {
                 token: credentialResponse.credential, // the JWT from Google
             });
 
@@ -90,7 +91,7 @@ const AuthModal = ({ isOpen, onClose, onUserAuthenticated }) => {
 
         try {
             if (mode === 'signup') {
-                const { data } = await axios.post(`${API_BASE_URL}/auth/register`, {
+                const { data } = await axios.post(`${API_BASE_URL}/api/auth/register`, {
                     username,
                     email,
                     password,
@@ -112,7 +113,7 @@ const AuthModal = ({ isOpen, onClose, onUserAuthenticated }) => {
                 return;
             }
 
-            const { data } = await axios.post(`${API_BASE_URL}/auth/login`, {
+            const { data } = await axios.post(`${API_BASE_URL}/api/auth/login`, {
                 email,
                 password,
             });
@@ -196,7 +197,7 @@ const AuthModal = ({ isOpen, onClose, onUserAuthenticated }) => {
                             </button>
                         </div>
                     )}
-                    
+
                     {roleTab === 'admin' && mode === 'login' && (
                         <div className="mb-4 text-center">
                             <div className="inline-flex items-center rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-medium text-amber-700">
@@ -277,10 +278,10 @@ const AuthModal = ({ isOpen, onClose, onUserAuthenticated }) => {
                                 <span className="flex-shrink-0 mx-4 text-slate-400 text-sm">Or continue with</span>
                                 <div className="flex-grow border-t border-[#ece7d8]"></div>
                             </div>
-                            
+
                             <div className="flex justify-center flex-col items-center w-full pointer-events-auto overflow-hidden">
                                 {!loading ? (
-                                    <div className="w-full max-w-[360px] min-w-0">
+                                    <div className="flex justify-center w-full">
                                         <GoogleLogin
                                             onSuccess={handleGoogleSuccess}
                                             onError={handleGoogleError}
@@ -289,7 +290,6 @@ const AuthModal = ({ isOpen, onClose, onUserAuthenticated }) => {
                                             shape="pill"
                                             size="large"
                                             text="signin_with"
-                                            width={GOOGLE_BUTTON_WIDTH}
                                         />
                                     </div>
                                 ) : (

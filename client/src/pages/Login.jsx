@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
 const Login = () => {
     const [isRegister, setIsRegister] = useState(false);
@@ -21,7 +21,7 @@ const Login = () => {
         const token = searchParams.get('token');
         if (token) {
             localStorage.setItem('adminToken', token);
-            navigate('/dashboard', { replace: true });
+            navigate('/admin/dashboard', { replace: true });
         }
     }, [navigate, searchParams]);
 
@@ -36,7 +36,7 @@ const Login = () => {
         setError('');
         setLoading(true);
         try {
-            const endpoint = isRegister ? `${API_BASE_URL}/auth/register` : `${API_BASE_URL}/auth/login`;
+            const endpoint = isRegister ? `${API_BASE_URL}/api/auth/register` : `${API_BASE_URL}/api/auth/login`;
             const payload = isRegister ? { username, password, email, role: 'admin' } : { email, password };
 
             const { data } = await axios.post(endpoint, payload);
@@ -49,7 +49,7 @@ const Login = () => {
             } else {
                 clearForm();
                 localStorage.setItem('adminToken', data.token);
-                navigate('/dashboard');
+                navigate('/admin/dashboard');
             }
         } catch (err) {
             setError(err.response?.data?.message || 'Authentication failed');
