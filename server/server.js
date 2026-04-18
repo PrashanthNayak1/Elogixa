@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'https://elogixa-web-client.vercel.app', 'https://elogixa-web-admin.vercel.app'],
+    origin: ['http://localhost:5173',' https://elogixa.vercel.app'],
     credentials: true
 }));
 app.use(express.json());
