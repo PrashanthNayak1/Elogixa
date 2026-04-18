@@ -1,10 +1,10 @@
 import React from 'react';
-// eslint-disable-next-line no-unused-vars
+
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle, Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
 
 const Home = () => {
     return (

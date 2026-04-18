@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
 
 const Login = () => {
     const [isRegister, setIsRegister] = useState(false);

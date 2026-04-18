@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { MapPin, DollarSign, Briefcase } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
 
 const JobBoard = () => {
     const [jobs, setJobs] = useState([]);
@@ -20,7 +20,7 @@ const JobBoard = () => {
         const fetchJobs = async () => {
             try {
                 const res = await axios.get(`${API_BASE_URL}/jobs`);
-                setJobs(res.data);
+                setJobs(Array.isArray(res.data) ? res.data : []);
             } catch (err) {
                 console.error(err);
             }

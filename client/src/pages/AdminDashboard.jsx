@@ -4,7 +4,7 @@ import { Plus, Trash2, FileText, LogOut, Loader2, Bookmark } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
 
 const AdminDashboard = () => {
     const [jobs, setJobs] = useState([]);
@@ -49,10 +49,10 @@ const AdminDashboard = () => {
             const msgsRes = await authAxios.get('/contact');
             const pendingAdminsRes = await authAxios.get('/auth/pending-admins');
 
-            setJobs(jobsRes.data);
-            setApplications(appsRes.data);
-            setMessages(msgsRes.data);
-            setPendingAdmins(pendingAdminsRes.data);
+            setJobs(Array.isArray(jobsRes.data) ? jobsRes.data : []);
+            setApplications(Array.isArray(appsRes.data) ? appsRes.data : []);
+            setMessages(Array.isArray(msgsRes.data) ? msgsRes.data : []);
+            setPendingAdmins(Array.isArray(pendingAdminsRes.data) ? pendingAdminsRes.data : []);
         } catch (err) {
             console.error('Error fetching dashboard data:', err);
             if (!handleAuthError(err)) {

@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { CloudCog, Eye, EyeOff, Mail, User, X } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '/api';
 const ADMIN_LOGIN_PATH = '/login';
 const ADMIN_DASHBOARD_PATH = '/dashboard';
 const GOOGLE_BUTTON_WIDTH = 360;
