@@ -110,7 +110,7 @@ const Home = () => {
                             className="bg-[#fff8e8] p-2 rounded-2xl shadow-xl shadow-amber-100 transition-all duration-500 max-w-2xl w-full mx-auto border border-[#efe2b8]"
                         >
                             <img
-                                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                src="/team.jpg"
                                 alt="Team working"
                                 className="rounded-xl w-full min-h-[240px] sm:min-h-[320px] h-full object-cover"
                             />
@@ -137,12 +137,12 @@ const Home = () => {
                     <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
                         {[
                             {
-                                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+                                image: "/service-managed-it.jpg",
                                 title: "Fully Managed IT Services",
                                 description: "End-to-end management of your IT operations, ensuring reliability, security, and peak performance."
                             },
                             {
-                                image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+                                image: "/service-infrastructure.jpg",
                                 title: "IT Infrastructure Solutions",
                                 description: "Robust framework design for networks, servers, and storage to engage your digital transformation."
                             },
@@ -152,17 +152,17 @@ const Home = () => {
                                 description: "Scalable, secure, and efficient data center management and design solutions."
                             },
                             {
-                                image: "https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&fit=crop&w=800&q=80",
+                                image: "/service-printing.jpg",
                                 title: "Managed Printing Services",
                                 description: "Cost-effective and efficient printing solutions to streamline your document workflow."
                             },
                             {
-                                image: "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=800&q=80",
+                                image: "/service-software.jpg",
                                 title: "Software Solutions",
                                 description: "Custom software development and integration to meet your unique business challenges."
                             },
                             {
-                                image: "https://images.unsplash.com/photo-1597852074816-d933c7d2b988?auto=format&fit=crop&w=800&q=80",
+                                image: "/service-repairs.jpg",
                                 title: "Desktop & Laptop Repairs",
                                 description: "Expert repair and maintenance services for your hardware assets including UPS systems."
                             }
