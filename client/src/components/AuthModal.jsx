@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
+
 const AuthModal = ({ isOpen, onClose, onUserAuthenticated }) => {
     const navigate = useNavigate();
     const [roleTab, setRoleTab] = useState('user'); // 'user' or 'admin'
