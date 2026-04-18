@@ -12,6 +12,11 @@ const contactRoutes = require('./routes/contact');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Database Connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/elogixa')
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.log(err));
+
 // Middleware
 app.use(cors({
     origin: ['http://localhost:5173', 'https://elogixa.vercel.app'],
@@ -19,10 +24,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Database Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/elogixa')
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.log(err));
+
 
 
 
