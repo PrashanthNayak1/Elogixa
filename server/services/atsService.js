@@ -7,7 +7,7 @@ const ai = process.env.GEMINI_API_KEY
 const evaluateResume = async (resumeText, jobDescription, jobSkills) => {
     try {
         if (!ai) {
-            return { atsScore: null, missingSkills: [] };
+            return { atsScore: null, missingSkills: [], presentSkills: [] };
         }
 
         const prompt = `
@@ -25,9 +25,11 @@ Analyze the following factors:
 Instructions:
 - Compare the resume with the job description and required skills carefully.
 - Identify important skills from the job description that are missing in the resume.
+- Identify all notable technical, professional, and soft skills present in the resume.
 - Calculate an ATS score between 0 and 100 representing the overall match percentage.
 - Higher score = better match.
-- Only list truly missing or weakly represented skills in "missingSkills".
+- Only list truly missing or weakly represented skills in "missingSkills" from the required skills.
+- List all extracted skills found in the resume in "presentSkills".
 
 Job Description:
 ${jobDescription}
@@ -45,7 +47,8 @@ Do not include explanations, text, or markdown.
 Expected JSON format:
 {
   "atsScore": number,
-  "missingSkills": ["skill1", "skill2", "skill3"]
+  "missingSkills": ["skill1", "skill2", "skill3"],
+  "presentSkills": ["skill4", "skill5", "skill6"]
 }
 `;
 
@@ -61,11 +64,12 @@ Expected JSON format:
         const resultJson = JSON.parse(resultText);
         return {
             atsScore: resultJson.atsScore || 0,
-            missingSkills: resultJson.missingSkills || []
+            missingSkills: resultJson.missingSkills || [],
+            presentSkills: resultJson.presentSkills || []
         };
     } catch (error) {
         console.error('Error evaluating resume with Gemini:', error);
-        return { atsScore: null, missingSkills: [] }; // Fallback
+        return { atsScore: null, missingSkills: [], presentSkills: [] }; // Fallback
     }
 };
 

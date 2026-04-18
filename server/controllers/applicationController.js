@@ -65,6 +65,7 @@ const submitApplication = async (req, res) => {
 
         let atsScore = null;
         let missingSkills = [];
+        let presentSkills = [];
 
         try {
             // parse PDF to text
@@ -77,6 +78,7 @@ const submitApplication = async (req, res) => {
                 const evaluation = await evaluateResume(resumeText, job.description, job.skills);
                 atsScore = evaluation.atsScore;
                 missingSkills = evaluation.missingSkills;
+                presentSkills = evaluation.presentSkills;
             }
         } catch (err) {
             console.error('Error during ATS evaluation:', err);
@@ -91,7 +93,8 @@ const submitApplication = async (req, res) => {
             experienceYears: isNaN(experienceYears) ? 0 : experienceYears,
             resumePath: result.secure_url, // Storing Cloudinary URL
             atsScore,
-            missingSkills
+            missingSkills,
+            presentSkills
         });
 
         const newApplication = await application.save();
@@ -104,7 +107,7 @@ const submitApplication = async (req, res) => {
 
 const getAllApplications = async (req, res) => {
     try {
-        const applications = await Application.find().sort({ submittedAt: -1 }).populate('jobId', 'title');
+        const applications = await Application.find().sort({ submittedAt: -1 }).populate('jobId', 'title skills');
         res.json(applications);
     } catch (err) {
         res.status(500).json({ message: err.message });

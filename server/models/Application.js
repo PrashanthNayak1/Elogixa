@@ -47,6 +47,10 @@ const applicationSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
+    presentSkills: {
+        type: [String],
+        default: [],
+    },
     status: {
         type: String,
         enum: ['Pending', 'Under Review', 'Shortlisted', 'Rejected', 'Accepted'],

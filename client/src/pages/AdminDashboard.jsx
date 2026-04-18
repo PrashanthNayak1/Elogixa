@@ -22,6 +22,7 @@ const AdminDashboard = () => {
         jobRole: 'all',
         experience: 'all',
         skill: 'all',
+        atsScore: 'all',
     });
     const navigate = useNavigate();
     const savedApplications = applications.filter((app) => app.isSavedForFuture);
@@ -198,11 +199,7 @@ const AdminDashboard = () => {
         )].sort((a, b) => a.localeCompare(b));
     }, [jobs]);
 
-    const applicationSkillOptions = useMemo(() => {
-        return [...new Set(
-            jobs.flatMap((job) => job.skills || [])
-        )].sort((a, b) => a.localeCompare(b));
-    }, [jobs]);
+
 
     const filteredApplications = useMemo(() => {
         return applications.filter((app) => {
@@ -218,11 +215,27 @@ const AdminDashboard = () => {
                 (applicationFilters.experience === '3-5' && experienceYears >= 3 && experienceYears <= 5) ||
                 (applicationFilters.experience === '6+' && experienceYears >= 6);
 
-            const skillMatches =
-                applicationFilters.skill === 'all' ||
-                (app.jobId?.skills || []).includes(applicationFilters.skill);
+            const skillSearch = applicationFilters.skill === 'all' ? '' : applicationFilters.skill.trim().toLowerCase();
+            let skillMatches = true;
+            if (skillSearch) {
+                if (app.presentSkills && app.presentSkills.length > 0) {
+                    // Fast logic for newly submitted resumes with full extracted skills
+                    skillMatches = app.presentSkills.some(s => s.toLowerCase().includes(skillSearch));
+                } else {
+                    // Fallback logic for old applications created before AI extracted presentSkills
+                    const jobRequiresIt = (app.jobId?.skills || []).some(s => s.toLowerCase().includes(skillSearch));
+                    const aiFlaggedMissing = (app.missingSkills || []).some(m => m.toLowerCase().includes(skillSearch));
+                    skillMatches = jobRequiresIt && !aiFlaggedMissing;
+                }
+            }
 
-            return jobRoleMatches && experienceMatches && skillMatches;
+            let atsMatches = true;
+            if (applicationFilters.atsScore !== 'all') {
+                const requiredScore = parseInt(applicationFilters.atsScore, 10);
+                atsMatches = (app.atsScore || 0) >= requiredScore;
+            }
+
+            return jobRoleMatches && experienceMatches && skillMatches && atsMatches;
         });
     }, [applications, applicationFilters]);
 
@@ -311,14 +324,14 @@ const AdminDashboard = () => {
                                 </div>
                                 <button
                                     type="button"
-                                    onClick={() => setApplicationFilters({ jobRole: 'all', experience: 'all', skill: 'all' })}
+                                    onClick={() => setApplicationFilters({ jobRole: 'all', experience: 'all', skill: 'all', atsScore: 'all' })}
                                     className="text-sm font-medium text-accent hover:underline self-start lg:self-auto"
                                 >
                                     Clear filters
                                 </button>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1">Job Role</label>
                                     <select
@@ -349,16 +362,30 @@ const AdminDashboard = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Skill</label>
+                                    <label className="block text-sm font-medium text-slate-700 mb-1">Search Skills</label>
+                                    <div className="relative">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                        <input
+                                            type="text"
+                                            placeholder="e.g. React, Node..."
+                                            value={applicationFilters.skill === 'all' ? '' : applicationFilters.skill}
+                                            onChange={(e) => setApplicationFilters((prev) => ({ ...prev, skill: e.target.value }))}
+                                            className="input-field pl-9 h-11"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-1">Minimum ATS Score</label>
                                     <select
-                                        value={applicationFilters.skill}
-                                        onChange={(e) => setApplicationFilters((prev) => ({ ...prev, skill: e.target.value }))}
-                                        className="input-field"
+                                        value={applicationFilters.atsScore}
+                                        onChange={(e) => setApplicationFilters((prev) => ({ ...prev, atsScore: e.target.value }))}
+                                        className="input-field h-11"
                                     >
-                                        <option value="all">All skills</option>
-                                        {applicationSkillOptions.map((skill) => (
-                                            <option key={skill} value={skill}>{skill}</option>
-                                        ))}
+                                        <option value="all">All scores</option>
+                                        <option value="90">90% and above</option>
+                                        <option value="75">75% and above</option>
+                                        <option value="50">50% and above</option>
                                     </select>
                                 </div>
                             </div>

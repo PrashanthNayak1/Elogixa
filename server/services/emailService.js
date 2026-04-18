@@ -132,7 +132,7 @@ const sendContactNotificationEmail = async ({ name, email, country, service, mes
 
         const info = await transporter.sendMail({
             from: `Elogixa Website <${process.env.EMAIL_USER}>`,
-            to: 'dhanush.nayak.100@gmail.com',
+            to: `${process.env.CONTACT_NOTIFICATION_EMAIL}`,
             replyTo: safeEmail,
             subject: `New client website enquiry from ${safeName}`,
             html: `
