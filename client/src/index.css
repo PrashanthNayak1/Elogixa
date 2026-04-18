@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+}
+
+:root {
+  --primary: #424242;
+  --secondary: #667085;
+  --accent: #f5b61b;
+  --accent-hover: #df9f10;
+  --background: #fffdf7;
+  --surface: #ffffff;
+}
+
+@layer base {
+  html {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    @apply bg-background text-primary font-sans antialiased;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors font-medium cursor-pointer;
+  }
+
+  .btn-outline {
+    @apply px-6 py-2 border border-accent text-accent rounded-lg hover:bg-amber-50 transition-colors font-medium cursor-pointer;
+  }
+
+  .card {
+    @apply bg-surface p-6 rounded-xl shadow-sm border border-[#ece7d8];
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 rounded-lg border border-[#d8d4c8] focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all bg-white;
+  }
+}
