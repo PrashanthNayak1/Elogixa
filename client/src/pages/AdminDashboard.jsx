@@ -269,8 +269,8 @@ const AdminDashboard = () => {
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
                             className={`px-4 py-2 rounded-full whitespace-nowrap border transition-colors ${activeTab === tab.key
-                                    ? 'bg-accent text-white border-accent'
-                                    : 'bg-white text-slate-600 border-[#e7e0c6] hover:bg-amber-50'
+                                ? 'bg-accent text-white border-accent'
+                                : 'bg-white text-slate-600 border-[#e7e0c6] hover:bg-amber-50'
                                 }`}
                         >
                             {tab.label}
@@ -441,8 +441,8 @@ const AdminDashboard = () => {
                                                     <button
                                                         onClick={() => handleToggleSavedApplicant(app._id, app.isSavedForFuture)}
                                                         className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors ${app.isSavedForFuture
-                                                                ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                                                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                                            ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                                                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                                             }`}
                                                         title={app.isSavedForFuture ? 'Remove applicant from saved list' : 'Save applicant for future'}
                                                     >
