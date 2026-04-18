@@ -7,7 +7,7 @@ const jwtSecret = process.env.JWT_SECRET || 'elogixa-local-dev-secret';
 // Generate JWT
 const generateToken = (id) => {
     return jwt.sign({ id }, jwtSecret, {
-        expiresIn: '30d',
+        expiresIn: '2d',
     });
 };
 
