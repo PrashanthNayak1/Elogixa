@@ -103,7 +103,7 @@ concurrently: ^8.2.2
 - Resume uploads now work locally even without Cloudinary. Files are saved under `server/uploads/resumes`.
 - ATS scoring is optional locally. If `GEMINI_API_KEY` is missing, applications still submit without ATS scoring.
 - Status emails require valid SMTP credentials. Gmail should use an App Password.
-- The chatbot was intentionally left unchanged.
+
 
 
 ## 👥 Contributing
