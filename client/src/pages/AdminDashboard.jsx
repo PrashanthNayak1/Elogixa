@@ -17,6 +17,7 @@ const AdminDashboard = () => {
     });
     const [resumeModal, setResumeModal] = useState({ isOpen: false, url: '', name: '' });
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null, type: null });
+    const [isDeleting, setIsDeleting] = useState(false);
     const [isCreatingJob, setIsCreatingJob] = useState(false);
     const [applicationFilters, setApplicationFilters] = useState({
         jobRole: 'all',
@@ -94,6 +95,7 @@ const AdminDashboard = () => {
     };
 
     const confirmDelete = async () => {
+        setIsDeleting(true);
         try {
             if (deleteModal.type === 'job') {
                 await authAxios.delete(`/jobs/${deleteModal.id}`);
@@ -109,6 +111,8 @@ const AdminDashboard = () => {
             if (!handleAuthError(err)) {
                 toast.error(`Failed to delete ${deleteModal.type}`);
             }
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -683,9 +687,10 @@ const AdminDashboard = () => {
                             </button>
                             <button
                                 onClick={confirmDelete}
-                                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2"
+                                disabled={isDeleting}
+                                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2 disabled:bg-red-400 disabled:cursor-not-allowed"
                             >
-                                <Trash2 size={16} /> Delete
+                                {isDeleting ? <><Loader2 size={16} className="animate-spin" /> Deleting...</> : <><Trash2 size={16} /> Delete</>}
                             </button>
                         </div>
                     </div>
