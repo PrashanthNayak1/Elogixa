@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { MapPin, IndianRupee, Briefcase } from 'lucide-react';
+import { MapPin, IndianRupee, Briefcase, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
@@ -14,14 +14,18 @@ const JobBoard = () => {
         name: '', email: '', phone: '', experienceYears: '0', resume: null
     });
     const [loading, setLoading] = useState(false);
+    const [isLoadingJobs, setIsLoadingJobs] = useState(true);
 
     useEffect(() => {
         const fetchJobs = async () => {
+            setIsLoadingJobs(true);
             try {
                 const res = await axios.get(`${API_BASE_URL}/api/jobs`);
                 setJobs(Array.isArray(res.data) ? res.data : []);
             } catch (err) {
                 console.error(err);
+            } finally {
+                setIsLoadingJobs(false);
             }
         };
         fetchJobs();
@@ -78,7 +82,12 @@ const JobBoard = () => {
                 </div>
 
                 <div className="grid gap-6">
-                    {jobs.length > 0 ? (
+                    {isLoadingJobs ? (
+                        <div className="flex flex-col justify-center items-center py-20 bg-white border border-[#ece7d8] rounded-xl shadow-sm">
+                            <Loader2 className="animate-spin text-slate-400 mb-4" size={48} />
+                            <h3 className="text-lg font-medium text-slate-700">Loading open positions...</h3>
+                        </div>
+                    ) : jobs.length > 0 ? (
                         jobs.map((job) => (
                             <motion.div
                                 key={job._id}
