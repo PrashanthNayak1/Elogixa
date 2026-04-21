@@ -268,7 +268,7 @@ const Home = () => {
                         >
                             <iframe
                                 title="Elogixa location map"
-                                src="https://www.google.com/maps?q=2nd%20floor%2C%20Prime%20City%20Center%2C%20Sadanand%20Kamath%20Road%2C%20Karkala%2C%20Karnataka%20574104&z=16&output=embed"
+                                src="https://www.google.com/maps?q=Elogixa%20Technology%20India%20Private%20Limited%20Karkala&z=17&output=embed"
                                 className="w-full h-full min-h-[320px] sm:min-h-[420px]"
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"
