@@ -83,7 +83,7 @@ const Navbar = () => {
                                 <button
                                     type="button"
                                     onClick={() => setIsAuthOpen(true)}
-                                    className="btn-outline !px-4 !py-2"
+                                    className="btn-outline px-4 py-2"
                                 >
                                     Register
                                 </button>
