@@ -15,12 +15,14 @@ import Services from './pages/Services';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 
+
 const AppLayout = () => {
   const { pathname } = useLocation();
   const isAdminRoute = pathname === '/admin/login' || pathname.startsWith('/admin/dashboard');
 
   return (
     <div className="min-h-screen bg-background text-primary">
+      
         <Toaster position="top-right" />
         {!isAdminRoute && <Navbar />}
 

@@ -33,6 +33,8 @@ const Navbar = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    
+
     const renderProfileButton = () => (
         <div className="relative">
             <button
@@ -73,7 +75,7 @@ const Navbar = () => {
                         </Link>
 
                         <div className="hidden md:flex items-center space-x-6">
-                            <Link to="/" onClick={handleNavClick} className="text-sm font-medium text-slate-700 hover:text-accent transition-colors">Home</Link>
+                            <Link to="/" onClick={handleNavClick}className="text-sm font-medium text-slate-700 hover:text-accent transition-colors">Home</Link>
                             <Link to="/jobs" onClick={handleNavClick} className="text-sm font-medium text-slate-700 hover:text-accent transition-colors">Careers</Link>
                             <Link to="/services" onClick={handleNavClick} className="text-sm font-medium text-slate-700 hover:text-accent transition-colors">Our Services</Link>
 
@@ -133,9 +135,9 @@ const Navbar = () => {
                             className="md:hidden bg-white border-b border-[#ece7d8] overflow-hidden"
                         >
                             <div className="px-4 pt-2 pb-4 space-y-2">
-                                <Link to="/" onClick={handleNavClick} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-accent hover:bg-amber-50">Home</Link>
-                                <Link to="/jobs" onClick={handleNavClick} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-accent hover:bg-amber-50">Careers</Link>
-                                <Link to="/services" onClick={handleNavClick} className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-accent hover:bg-amber-50">Our Services</Link>
+                                <Link  onClick={()=>{scrollTo(0,0);setIsOpen(false)}} to='/' className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-accent hover:bg-amber-50">Home</Link>
+                                <Link  onClick={()=>{scrollTo(0,0);setIsOpen(false)}} to='/jobs' className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-accent hover:bg-amber-50">Careers</Link>
+                                <Link  onClick={()=>{scrollTo(0,0);setIsOpen(false)}} to='/services' className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-accent hover:bg-amber-50">Our Services</Link>
 
                                 {authUser ? (
                                     <>

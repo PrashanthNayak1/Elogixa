@@ -250,7 +250,7 @@ const Home = () => {
                             </div>
 
                             <a
-                                href="https://maps.google.com/?q=2nd%20floor%2C%20Prime%20City%20Center%2C%20Sadanand%20Kamath%20Road%2C%20Karkala%2C%20Karnataka%20574104"
+                                href="https://www.google.com/maps?q=Elogixa%20Technology%20India%20Private%20Limited%20Karkala&z=17"
                                 target="_blank"
                                 rel="noreferrer"
                                 className="inline-flex items-center justify-center mt-6 px-4 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-semibold transition-colors"
