@@ -87,4 +87,3 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-CONTACT_NOTIFICATION_EMAIL=apoorva3poojari@gmail.com

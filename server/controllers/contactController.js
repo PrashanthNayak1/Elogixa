@@ -7,7 +7,7 @@ const dialogflowWebhook = async (req, res) => {
 
         const params = req.body.queryResult?.parameters || {};
 
-        const name = params.name || params['person']?.name || (typeof params['person'] === 'string' ? params['person'] : '') || '';
+        const name = typeof params['person'] === 'object' ? params['person']?.name : params['person'] || params.name || '';
         const email = params.email || '';
         const country = params['geo-country'] || '';
         const service = params.service || '';
