@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { submitContactMessage, getAllMessages, dialogflowWebhook } = require('../controllers/contactController');
+const { submitContactMessage, getAllMessages } = require('../controllers/contactController');
 const { protect } = require('../middleware/authMiddleware');
 
-// @desc    Dialogflow webhook
-// @route   POST /api/contact/webhook
-router.post('/webhook', dialogflowWebhook);
+
 
 // @desc    Submit a contact message
 // @route   POST /api/contact

@@ -8,7 +8,7 @@ const applicationRoutes = require('./routes/applications');
 const authRoutes = require('./routes/auth');
 const contactRoutes = require('./routes/contact');
 const connectDB = require('./config/db');
-const { dialogflowWebhook } = require('./controllers/contactController');
+const webhookRoutes = require('./routes/webhookRoutes');
 
 
 
@@ -35,48 +35,49 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/webhook',webhookRoutes)
 
-// Dialogflow webhook — handles contact intent + Groq AI for everything else
-let groq;
-try {
-    groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-} catch (e) {
-    console.warn("Groq not initialized:", e.message);
-}
+// // Dialogflow webhook — handles contact intent + Groq AI for everything else
+// let groq;
+// try {
+//     groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// } catch (e) {
+//     console.warn("Groq not initialized:", e.message);
+// }
 
-app.post('/webhook', async (req, res) => {
-    console.log("Webhook received:", JSON.stringify(req.body, null, 2));
+// app.post('/webhook', async (req, res) => {
+//     console.log("Webhook received:", JSON.stringify(req.body, null, 2));
 
-    const queryResult = req.body?.queryResult;
-    if (!queryResult?.queryText) {
-        return res.status(400).json({ fulfillmentText: "Invalid request format." });
-    }
+//     const queryResult = req.body?.queryResult;
+//     if (!queryResult?.queryText) {
+//         return res.status(400).json({ fulfillmentText: "Invalid request format." });
+//     }
 
-    const intentName = queryResult?.intent?.displayName || "";
+//     const intentName = queryResult?.intent?.displayName || "";
 
-    // Contact intent → save to MongoDB
-    if (intentName.toLowerCase().includes("contact")) {
-        return dialogflowWebhook(req, res);
-    }
+//     // Contact intent → save to MongoDB
+//     if (intentName.toLowerCase().includes("contact")) {
+//         return dialogflowWebhook(req, res);
+//     }
 
-    // All other intents → Groq AI
-    try {
-        const completion = await groq.chat.completions.create({
-            model: "llama-3.3-70b-versatile",
-            messages: [
-                {
-                    role: "system",
-                    content: "You are Elogixa Bot, an assistant for Elogixa company. Keep answers short and concise. Only on the very first message in a conversation, briefly introduce yourself as Elogixa Bot and mention that you help users with Elogixa's IT services. After that, just answer questions directly without re-introducing yourself."
-                },
-                { role: "user", content: queryResult.queryText }
-            ],
-        });
-        res.json({ fulfillmentText: completion.choices[0].message.content });
-    } catch (error) {
-        console.error("Groq API error:", error?.message || error);
-        res.json({ fulfillmentText: "Sorry, I couldn't process your request right now." });
-    }
-});
+//     // All other intents → Groq AI
+//     try {
+//         const completion = await groq.chat.completions.create({
+//             model: "llama-3.3-70b-versatile",
+//             messages: [
+//                 {
+//                     role: "system",
+//                     content: "You are Elogixa Bot, an assistant for Elogixa company. Keep answers short and concise. Only on the very first message in a conversation, briefly introduce yourself as Elogixa Bot and mention that you help users with Elogixa's IT services. After that, just answer questions directly without re-introducing yourself."
+//                 },
+//                 { role: "user", content: queryResult.queryText }
+//             ],
+//         });
+//         res.json({ fulfillmentText: completion.choices[0].message.content });
+//     } catch (error) {
+//         console.error("Groq API error:", error?.message || error);
+//         res.json({ fulfillmentText: "Sorry, I couldn't process your request right now." });
+//     }
+// });
 
 app.get('/', (req, res) => {
     res.send('Elogixa API is running');
