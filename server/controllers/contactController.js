@@ -14,9 +14,8 @@ const dialogflowWebhook = async (req, res) => {
         const message = params.message || '';
 
         if (!name || !email || !service || !message) {
-            return res.json({
-                fulfillmentText: "Please provide all required details (name, email, service, and message)."
-            });
+            // During slot filling, return empty response so Dialogflow keeps collecting
+            return res.json({});
         }
 
         await Contact.create({ name, email, country, service, message });
