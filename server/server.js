@@ -37,7 +37,12 @@ app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 
 // Dialogflow webhook — handles contact intent + Groq AI for everything else
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+let groq;
+try {
+    groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+} catch (e) {
+    console.warn("Groq not initialized:", e.message);
+}
 
 app.post('/webhook', async (req, res) => {
     console.log("Webhook received:", JSON.stringify(req.body, null, 2));
@@ -82,3 +87,4 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+CONTACT_NOTIFICATION_EMAIL=apoorva3poojari@gmail.com
