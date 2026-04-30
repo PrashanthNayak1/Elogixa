@@ -187,8 +187,8 @@ const JobBoard = () => {
                                 <p className="mt-1 text-xs text-slate-500">If you are a fresher, enter `0`.</p>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1 text-slate-700">Resume (PDF/DOC)</label>
-                                <input type="file" name="resume" required className="input-field py-2" onChange={handleFileChange} />
+                                <label className="block text-sm font-medium mb-1 text-slate-700">Resume (PDF/DOCX)</label>
+                                <input type="file" name="resume" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required className="input-field py-2" onChange={handleFileChange} />
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-4 mt-6">
