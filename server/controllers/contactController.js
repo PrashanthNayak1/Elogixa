@@ -26,7 +26,7 @@ const dialogflowWebhook = async (req, res) => {
         await sendContactNotificationEmail({ name, email, country, service, message });
 
         return res.json({
-            fulfillmentText: `Thanks ${name}! We received your request and will contact you soon.`
+            fulfillmentText: `Thank you, ${name}! 🙏 Your enquiry has been successfully received. Our team will review your request and get in touch with you at ${email} within 1–2 business days. We look forward to working with you!`
         });
     } catch (error) {
         console.error("Webhook error:", error);
