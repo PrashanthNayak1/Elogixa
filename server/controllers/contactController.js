@@ -5,17 +5,20 @@ const dialogflowWebhook = async (req, res) => {
     try {
         console.log("Webhook Body:", JSON.stringify(req.body, null, 2));
 
-        const params = req.body.queryResult?.parameters || {};
+        const queryResult = req.body.queryResult || {};
+        const params = queryResult.parameters || {};
+        const allParamsPresent = queryResult.allRequiredParamsPresent;
 
-        const name = typeof params['person'] === 'object' ? params['person']?.name : params['person'] || params.name || '';
+        const rawName = params['person'] || params['name'] || '';
+        const name = typeof rawName === 'object' ? (rawName?.name || '') : rawName;
         const email = params.email || '';
         const country = params['geo-country'] || '';
         const service = params.service || '';
         const message = params.message || '';
 
-        if (!name || !email || !service || !message) {
-            // During slot filling, return empty response so Dialogflow keeps collecting
-            return res.json({});
+        // If not all params collected yet, let Dialogflow handle slot filling
+        if (!allParamsPresent || !name || !email || !service || !message) {
+            return res.json({ fulfillmentText: '' });
         }
 
         await Contact.create({ name, email, country, service, message });
