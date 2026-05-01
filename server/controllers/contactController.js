@@ -15,11 +15,14 @@ const dialogflowWebhook = async (req, res) => {
         const country = params.country || '';
         const service = params.service || '';
         const message = params.message || '';
+       
 
         // If not all params collected yet, let Dialogflow handle slot filling
         if (!allParamsPresent || !name || !email || !service || !message) {
             return res.json({ fulfillmentText: '' });
         }
+        
+
 
         await Contact.create({ name, email, country, service, message });
 

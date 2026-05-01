@@ -419,7 +419,7 @@ const AdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredApplications.map(app => (
+                                    {filteredApplications.map((app, index) => (
                                         <tr key={app._id} className="border-b border-[#f1ecdf] hover:bg-[#fffdf7]">
                                             <td className="p-4 font-medium text-slate-800">{app.name}</td>
                                             <td className="p-4 text-slate-600">{app.jobId ? app.jobId.title : 'Deleted Job'}</td>
@@ -473,7 +473,7 @@ const AdminDashboard = () => {
                                                                 <span className="text-xs text-slate-500 cursor-help border-b border-dashed border-slate-400 pb-0.5">
                                                                     Misses {app.missingSkills.length} {app.missingSkills.length === 1 ? 'skill' : 'skills'}
                                                                 </span>
-                                                                <div className="absolute z-[100] top-full left-0 mt-2 hidden group-hover:block w-64 max-h-56 overflow-y-auto p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl border border-[#e7e0c6]">
+                                                                <div className={`absolute z-[100] ${index >= filteredApplications.length - 2 && filteredApplications.length > 2 ? 'bottom-full mb-2' : 'top-full mt-2'} left-0 hidden group-hover:block w-64 max-h-56 overflow-y-auto p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl border border-[#e7e0c6]`}>
                                                                     <div className="font-bold text-slate-500 mb-1.5 border-b border-[#ece7d8] pb-1 sticky top-0 bg-white">Missing Skills:</div>
                                                                     <div className="flex flex-wrap gap-1.5">
                                                                         {app.missingSkills.map((skill, i) => (
