@@ -37,12 +37,17 @@ const handleWebhook = async (req, res) => {
                 });
             }
 
-            const jobList = jobs.map(job =>
-                `📌 ${job.title}\n   ${job.openings} position${job.openings > 1 ? 's' : ''} available | ${job.location}`
-            ).join('\n\n');
+            const messages = [
+                { text: { text: [`🎯 Current Job Openings at Elogixa:`] } },
+                ...jobs.map(job => ({
+                    text: { text: [`📌 ${job.title}\n${job.openings} position${job.openings > 1 ? 's' : ''} available | ${job.location}`] }
+                })),
+                { text: { text: [`💼 Visit our Jobs page to apply or type "contact" to reach our HR team.`] } }
+            ];
 
             return res.json({
-                fulfillmentText: `🎯 Current Job Openings at Elogixa:\n\n${jobList}\n\n💼 Visit our Jobs page to apply or type "contact" to reach our HR team.`
+                fulfillmentText: `Current openings: ${jobs.map(j => j.title).join(', ')}`,
+                fulfillmentMessages: messages
             });
         } catch (err) {
             console.error("Job fetch error:", err);
