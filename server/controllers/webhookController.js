@@ -38,11 +38,11 @@ const handleWebhook = async (req, res) => {
             }
 
             const jobList = jobs.map((job, i) =>
-                `${i + 1}. ${job.title} — ${job.openings} opening${job.openings > 1 ? 's' : ''} (${job.location})`
+                `\n📌 *${job.title}*\n   • ${job.openings} position${job.openings > 1 ? 's' : ''} available\n   • Location: ${job.location}`
             ).join('\n');
 
             return res.json({
-                fulfillmentText: `Here are our current job openings at Elogixa:\n\n${jobList}\n\nVisit our Jobs page to apply or type "contact" to get in touch with our HR team.`
+                fulfillmentText: `🎯 *Current Job Openings at Elogixa:*${jobList}\n\n💼 Ready to apply? Visit our Jobs page or type "contact" to speak with our HR team!`
             });
         } catch (err) {
             console.error("Job fetch error:", err);
