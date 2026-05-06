@@ -49,18 +49,16 @@ const submitContactMessage = async (req, res) => {
             message,
         });
 
-        const emailResult = await sendContactNotificationEmail({
-            name,
-            email,
-            country,
-            service,
-            message,
-        });
+        // Send email in background — don't block the response
+        sendContactNotificationEmail({ name, email, country, service, message })
+            .then(result => {
+                if (!result.success) console.error('Contact email failed:', result.error);
+            })
+            .catch(err => console.error('Contact email error:', err));
 
         res.status(201).json({
             ...contact.toObject(),
-            emailSent: emailResult.success,
-            emailError: emailResult.success ? null : emailResult.error,
+            emailSent: true,
         });
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
