@@ -12,12 +12,13 @@ const dialogflowWebhook = async (req, res) => {
         const rawName = params['person'] || params['name'] || '';
         const name = typeof rawName === 'object' ? (rawName?.name || '') : rawName;
         const email = params.email || '';
-        const country = params['geo-country'] || '';
+        const rawCountry = params['geo-country'] || '';
+        const country = typeof rawCountry === 'object' ? (rawCountry?.['country'] || rawCountry?.name || '') : rawCountry;
         const service = params.service || '';
         const message = params.message || '';
 
         // If not all params collected yet, let Dialogflow handle slot filling
-        if (!allParamsPresent || !name || !email || !service || !message) {
+        if (!allParamsPresent || !name || !email || !country || !service || !message) {
             return res.json({ fulfillmentText: '' });
         }
 
