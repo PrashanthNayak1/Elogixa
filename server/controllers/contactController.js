@@ -74,8 +74,31 @@ const getAllMessages = async (req, res) => {
     }
 };
 
+const deleteMessage = async (req, res) => {
+    try {
+        const msg = await Contact.findByIdAndDelete(req.params.id);
+        if (!msg) return res.status(404).json({ message: 'Message not found' });
+        res.json({ message: 'Deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+const deleteAllMessages = async (req, res) => {
+    try {
+        const { before } = req.query;
+        const filter = before ? { createdAt: { $lt: new Date(before) } } : {};
+        const result = await Contact.deleteMany(filter);
+        res.json({ message: `${result.deletedCount} message(s) deleted` });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 module.exports = {
     dialogflowWebhook,
     submitContactMessage,
-    getAllMessages
+    getAllMessages,
+    deleteMessage,
+    deleteAllMessages
 };
