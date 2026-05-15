@@ -19,6 +19,7 @@ const AdminDashboard = () => {
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null, type: null });
     const [isDeleting, setIsDeleting] = useState(false);
     const [isCreatingJob, setIsCreatingJob] = useState(false);
+    const [actioningAdmins, setActioningAdmins] = useState({});
     const [applicationFilters, setApplicationFilters] = useState({
         jobRole: 'all',
         experience: 'all',
@@ -137,6 +138,7 @@ const AdminDashboard = () => {
     };
 
     const handleApproveAdmin = async (id) => {
+        setActioningAdmins(prev => ({ ...prev, [id]: 'approving' }));
         try {
             await authAxios.put(`/auth/pending-admins/${id}/approve`);
             toast.success('Admin request approved!');
@@ -146,10 +148,13 @@ const AdminDashboard = () => {
             if (!handleAuthError(err)) {
                 toast.error('Failed to approve admin');
             }
+        } finally {
+            setActioningAdmins(prev => ({ ...prev, [id]: null }));
         }
     };
 
     const handleRejectAdmin = async (id) => {
+        setActioningAdmins(prev => ({ ...prev, [id]: 'rejecting' }));
         try {
             await authAxios.delete(`/auth/pending-admins/${id}/reject`);
             toast.success('Admin request rejected.');
@@ -159,6 +164,8 @@ const AdminDashboard = () => {
             if (!handleAuthError(err)) {
                 toast.error('Failed to reject admin');
             }
+        } finally {
+            setActioningAdmins(prev => ({ ...prev, [id]: null }));
         }
     };
 
@@ -512,7 +519,7 @@ const AdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredApplications.map(app => (
+                                    {filteredApplications.map((app, index) => (
                                         <tr key={app._id} className="border-b border-[#f1ecdf] hover:bg-[#fffdf7]">
                                             <td className="p-4 font-medium text-slate-800">{app.name}</td>
                                             <td className="p-4 text-slate-600">{app.jobId ? app.jobId.title : 'Deleted Job'}</td>
@@ -566,8 +573,8 @@ const AdminDashboard = () => {
                                                                 <span className="text-xs text-slate-500 cursor-help border-b border-dashed border-slate-400 pb-0.5">
                                                                     Misses {app.missingSkills.length} {app.missingSkills.length === 1 ? 'skill' : 'skills'}
                                                                 </span>
-                                                                <div className="absolute z-100 bottom-full left-0 mb-2 hidden group-hover:block w-56 p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl border border-[#e7e0c6]">
-                                                                    <div className="font-bold text-slate-500 mb-1.5 border-b border-[#ece7d8] pb-1">Missing Skills:</div>
+                                                                <div className={`absolute z-[100] ${index >= filteredApplications.length - 2 && filteredApplications.length > 2 ? 'bottom-full mb-2' : 'top-full mt-2'} left-0 hidden group-hover:block w-64 max-h-56 overflow-y-auto p-2 bg-white text-slate-700 text-xs rounded-lg shadow-xl border border-[#e7e0c6]`}>
+                                                                    <div className="font-bold text-slate-500 mb-1.5 border-b border-[#ece7d8] pb-1 sticky top-0 bg-white">Missing Skills:</div>
                                                                     <div className="flex flex-wrap gap-1.5">
                                                                         {app.missingSkills.map((skill, i) => (
                                                                             <span key={i} className="bg-[#f7f5ec] px-1.5 py-0.5 rounded text-[10px] text-slate-600 border border-[#e7e0c6]">
@@ -816,11 +823,11 @@ const AdminDashboard = () => {
                                             <td className="p-4 text-slate-600">{admin.email}</td>
                                             <td className="p-4">
                                                 <div className="flex gap-2">
-                                                    <button onClick={() => handleApproveAdmin(admin._id)} className="px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors">
-                                                        Accept
+                                                    <button onClick={() => handleApproveAdmin(admin._id)} disabled={actioningAdmins[admin._id]} className="px-3 py-1.5 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed">
+                                                        {actioningAdmins[admin._id] === 'approving' && <Loader2 size={14} className="animate-spin" />} Accept
                                                     </button>
-                                                    <button onClick={() => handleRejectAdmin(admin._id)} className="px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors">
-                                                        Decline
+                                                    <button onClick={() => handleRejectAdmin(admin._id)} disabled={actioningAdmins[admin._id]} className="px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed">
+                                                        {actioningAdmins[admin._id] === 'rejecting' && <Loader2 size={14} className="animate-spin" />} Decline
                                                     </button>
                                                 </div>
                                             </td>
@@ -857,7 +864,7 @@ const AdminDashboard = () => {
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <iframe
-                                src={resumeModal.url}
+                                src={resumeModal.url.toLowerCase().includes('.doc') ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(resumeModal.url)}` : resumeModal.url}
                                 className="w-full h-full border-0"
                                 title="Resume Preview"
                             />

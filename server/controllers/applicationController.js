@@ -4,6 +4,7 @@ const { sendStatusUpdateEmail } = require('../services/emailService');
 const cloudinary = require('../config/cloudinaryConfig');
 const { evaluateResume } = require('../services/atsService');
 const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 
 
 const submitApplication = async (req, res) => {
@@ -42,13 +43,21 @@ const submitApplication = async (req, res) => {
         // stream to Cloudinary
         const streamUpload = (req) => {
             return new Promise((resolve, reject) => {
+                const isRaw = req.file.originalname.toLowerCase().match(/\.(docx|doc)$/);
+                const options = {
+                    folder: 'resumes',
+                    resource_type: isRaw ? 'raw' : 'auto',
+                    type: 'upload',
+                    access_mode: 'public', // Ensure public access
+                };
+
+                if (isRaw) {
+                    const ext = require('path').extname(req.file.originalname);
+                    options.public_id = `resume_${Date.now()}_${Math.floor(Math.random() * 10000)}${ext}`;
+                }
+
                 const stream = cloudinary.uploader.upload_stream(
-                    {
-                        folder: 'resumes',
-                        resource_type: 'auto',
-                        type: 'upload',
-                        access_mode: 'public', // Ensure public access
-                    },
+                    options,
                     (error, result) => {
                         if (result) {
                             resolve(result);
@@ -68,17 +77,28 @@ const submitApplication = async (req, res) => {
         let presentSkills = [];
 
         try {
-            // parse PDF to text
-            const pdfData = await pdfParse(req.file.buffer);
-            const resumeText = pdfData.text;
+            let resumeText = '';
 
-            // evaluate ATS score
-            const job = await Job.findById(req.body.jobId);
-            if (job) {
-                const evaluation = await evaluateResume(resumeText, job.description, job.skills);
-                atsScore = evaluation.atsScore;
-                missingSkills = evaluation.missingSkills;
-                presentSkills = evaluation.presentSkills;
+            // check file type and parse accordingly
+            if (req.file.mimetype === 'application/pdf' || req.file.originalname.toLowerCase().endsWith('.pdf')) {
+                const pdfData = await pdfParse(req.file.buffer);
+                resumeText = pdfData.text;
+            } else if (req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || req.file.originalname.toLowerCase().endsWith('.docx')) {
+                const docxData = await mammoth.extractRawText({ buffer: req.file.buffer });
+                resumeText = docxData.value;
+            } else {
+                console.warn(`Unsupported file type for ATS evaluation: ${req.file.originalname}`);
+            }
+
+            if (resumeText) {
+                // evaluate ATS score
+                const job = await Job.findById(req.body.jobId);
+                if (job) {
+                    const evaluation = await evaluateResume(resumeText, job.description, job.skills);
+                    atsScore = evaluation.atsScore;
+                    missingSkills = evaluation.missingSkills;
+                    presentSkills = evaluation.presentSkills;
+                }
             }
         } catch (err) {
             console.error('Error during ATS evaluation:', err);
